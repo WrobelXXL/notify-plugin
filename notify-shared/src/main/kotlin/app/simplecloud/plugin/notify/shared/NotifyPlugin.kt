@@ -21,7 +21,7 @@ class NotifyPlugin(
     private val dateFormat = SimpleDateFormat(config.dateFormat)
 
     fun onMessageAnnounce(function: (message: Component, permission: String?) -> Unit) {
-        val pubSubClient = PubSubClient("127.0.0.1", 8080) //TODO: Replace IP and Port to let that work properly, not done yet because Philipp hasn't
+        val pubSubClient = PubSubClient("127.0.0.1", 8080) //TODO: Replace IP and Port to let that work properly, not done yet
 
         pubSubClient.subscribe("event", ServerUpdateEvent::class.java) { event ->
 
