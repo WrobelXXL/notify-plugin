@@ -1,12 +1,20 @@
 [versions]
 kotlin = "2.0.20"
 shadow = "8.3.3"
-simplecloud-controller = "0.0.28-EXPERIMENTAL"
+simplecloud-controller = "0.0.30-dev.6b9d2ab"
+simplecloud-event = "0.0.1-dev.a36640f"
+velocity = "3.4.0-SNAPSHOT"
+bungeecord = "1.20-R0.2"
 
 [libraries]
 kotlin-jvm = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-simplecloud-controller = { module = "app.simplecloud.controller:controller-api", version.ref = "simplecloud-controller"}
+simplecloud-controller = { module = "app.simplecloud.controller:controller-api", version.ref = "simplecloud-controller" }
+simplecloud-event-bungeecord = { module = "app.simplecloud.event:event-wrapper-bungeecord", version.ref = "simplecloud-event" }
+simplecloud-event-velocity = { module = "app.simplecloud.event:event-wrapper-velocity", version.ref = "simplecloud-event" }
+simplecloud-event-shared = { module = "app.simplecloud.event:event-wrapper-shared", version.ref = "simplecloud-event" }
+velocity = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
+bungeecord = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord" }
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
