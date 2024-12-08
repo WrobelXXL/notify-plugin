@@ -13,7 +13,7 @@ plugins {
 }
 
 //TODO: Rename root project
-rootProject.name = "template-gradle"
+rootProject.name = "notify-plugin"
 
 //TODO: Rename sub projects
-include("template-gradle-main", "template-gradle-shared")
+include("notify-shared", "notify-velocity", "notify-bungeecord")
