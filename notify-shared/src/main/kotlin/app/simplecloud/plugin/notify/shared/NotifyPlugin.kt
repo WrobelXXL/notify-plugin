@@ -25,12 +25,11 @@ class NotifyPlugin(
 
         pubSubClient.subscribe("event", ServerUpdateEvent::class.java) { event ->
 
-            val serverState = event.serverAfter.serverState
+            val serverAfter = event.serverAfterOrNull ?: return@subscribe
+            val serverState = serverAfter.serverState
 
             val filter = config.serverStateFilter.filter { it.serverState == serverState }
             if (filter.isEmpty()) return@subscribe
-
-            val serverAfter = event.serverAfterOrNull ?: return@subscribe
 
             fun timeStampToLong(timeStamp: Timestamp): Long {
                 return ProtoBufTimestamp.toLocalDateTime(timeStamp).toInstant(OffsetDateTime.now().offset)
