@@ -1,8 +1,8 @@
 [versions]
 kotlin = "2.0.20"
 shadow = "8.3.3"
-simplecloud-controller = "0.0.30-dev.6b9d2ab"
-simplecloud-event = "0.0.1-dev.a36640f"
+simplecloud-controller = "0.0.30-dev.a36640f"
+simplecloud-event = "0.0.1-dev.968f5f5"
 velocity = "3.4.0-SNAPSHOT"
 bungeecord = "1.20-R0.2"
 

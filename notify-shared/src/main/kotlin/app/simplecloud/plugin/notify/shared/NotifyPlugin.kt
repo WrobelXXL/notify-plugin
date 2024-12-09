@@ -1,7 +1,7 @@
 package app.simplecloud.plugin.notify.shared
 
-import app.simplecloud.controller.shared.auth.AuthCallCredentials
-import app.simplecloud.controller.shared.time.ProtoBufTimestamp
+import app.simplecloud.droplet.api.auth.AuthCallCredentials
+import app.simplecloud.droplet.api.time.ProtobufTimestamp
 import app.simplecloud.plugin.notify.shared.config.Config
 import app.simplecloud.plugin.notify.shared.config.ConfigFactory
 import app.simplecloud.pubsub.PubSubClient
@@ -37,7 +37,7 @@ class NotifyPlugin(
             if (filter.isEmpty()) return@subscribe
 
             fun timeStampToLong(timeStamp: Timestamp): Long {
-                return ProtoBufTimestamp.toLocalDateTime(timeStamp).toInstant(OffsetDateTime.now().offset)
+                return ProtobufTimestamp.toLocalDateTime(timeStamp).toInstant(OffsetDateTime.now().offset)
                     .toEpochMilli()
             }
 
