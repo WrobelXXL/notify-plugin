@@ -27,8 +27,7 @@ class VelocityNotifyPlugin @Inject constructor(
 
         notifyPlugin.onFilterMatch { message, permission ->
             server.allPlayers.forEach { onlinePlayer ->
-                if (permission != null && !onlinePlayer.hasPermission(permission)) return@forEach
-                onlinePlayer.sendMessage(message)
+                if (permission.isEmpty() || onlinePlayer.hasPermission(permission)) onlinePlayer.sendMessage(message)
             }
         }
     }
