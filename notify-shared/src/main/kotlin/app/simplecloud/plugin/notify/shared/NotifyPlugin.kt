@@ -7,6 +7,7 @@ import app.simplecloud.plugin.notify.shared.config.ConfigFactory
 import app.simplecloud.pubsub.PubSubClient
 import build.buf.gen.simplecloud.controller.v1.ServerUpdateEvent
 import build.buf.gen.simplecloud.controller.v1.serverAfterOrNull
+import build.buf.gen.simplecloud.controller.v1.serverBeforeOrNull
 import com.google.protobuf.Timestamp
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -31,6 +32,8 @@ class NotifyPlugin(
         pubSubClient.subscribe("event", ServerUpdateEvent::class.java) { event ->
 
             val serverAfter = event.serverAfterOrNull ?: return@subscribe
+            if(event.serverBeforeOrNull?.serverState == serverAfter.serverState) return@subscribe
+
             val serverState = serverAfter.serverState
 
             val filter = config.serverStateFilter.filter { it.serverState == serverState }
