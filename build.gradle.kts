@@ -56,8 +56,6 @@ subprojects {
              * TODO: Add dependencies ADDED BY YOU like this:
              * include(dependency(libs.your.dependency.get()))
              */
-            include(dependency(libs.velocity.get()))
-            include(dependency(libs.bungeecord.get()))
         }
         archiveFileName.set("${project.name}.jar")
     }

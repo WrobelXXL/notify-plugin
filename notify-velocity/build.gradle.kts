@@ -6,6 +6,7 @@ apply(plugin = "kotlin-kapt")
 
 dependencies {
     api(project(":notify-shared"))
-    implementation(libs.velocity)
+
+    compileOnly(libs.velocity)
     kapt("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
 }
