@@ -18,7 +18,6 @@ An in-game plugin that notifies about v3 server changes.
 
 Here you can see the configuration file for the plugin. All possible options are explained in the comments.
 ```yaml
-
 # The date format pattern the notify plugin uses.
 # For more information, see the official Java documentation: https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/SimpleDateFormat.html
 date-format: dd.MM.yyyy HH:mm:ss
