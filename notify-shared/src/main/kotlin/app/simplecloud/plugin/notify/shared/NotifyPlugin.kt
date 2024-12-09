@@ -1,5 +1,6 @@
 package app.simplecloud.plugin.notify.shared
 
+import app.simplecloud.controller.shared.auth.AuthCallCredentials
 import app.simplecloud.controller.shared.time.ProtoBufTimestamp
 import app.simplecloud.plugin.notify.shared.config.Config
 import app.simplecloud.plugin.notify.shared.config.ConfigFactory
@@ -21,7 +22,11 @@ class NotifyPlugin(
     private val dateFormat = SimpleDateFormat(config.dateFormat)
 
     fun onFilterMatch(function: (message: Component, permission: String?) -> Unit) {
-        val pubSubClient = PubSubClient("127.0.0.1", 8080) //TODO: Replace IP and Port to let that work properly, not done yet
+        val pubSubClient = PubSubClient(
+            System.getenv("CONTROLLER_PUBSUB_HOST"),
+            System.getenv("CONTROLLER_PUBSUB_PORT").toInt(),
+            AuthCallCredentials(System.getenv("CONTROLLER_SECRET"))
+        )
 
         pubSubClient.subscribe("event", ServerUpdateEvent::class.java) { event ->
 
