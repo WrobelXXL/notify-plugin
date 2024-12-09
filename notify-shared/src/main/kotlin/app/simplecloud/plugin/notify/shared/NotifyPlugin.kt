@@ -21,7 +21,7 @@ class NotifyPlugin(
     private val config: Config = ConfigFactory.loadOrCreate(dataDirectory)
     private val dateFormat = SimpleDateFormat(config.dateFormat)
 
-    fun onFilterMatch(function: (message: Component, permission: String?) -> Unit) {
+    fun onFilterMatch(function: (message: Component, permission: String) -> Unit) {
         val pubSubClient = PubSubClient(
             System.getenv("CONTROLLER_PUBSUB_HOST"),
             System.getenv("CONTROLLER_PUBSUB_PORT").toInt(),
