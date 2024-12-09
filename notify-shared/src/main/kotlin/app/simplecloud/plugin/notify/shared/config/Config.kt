@@ -20,7 +20,11 @@ data class Config(
                 "<server_update_date> - The last update date of the server\n" +
                 "<server_state> - The new state of the server"
     )
-    val serverStateFilter: List<ServerStateChangedFilterEntry> = ServerState.entries.map {
+    val serverStateFilter: List<ServerStateChangedFilterEntry> = listOf(
+        ServerState.STARTING,
+        ServerState.AVAILABLE,
+        ServerState.STOPPING
+    ).map {
         ServerStateChangedFilterEntry(
             it,
             "<color:#38bdf8><bold>⚡</bold></color> <hover:show_text:'<color:#38bdf8><bold>⚡</bold></color> Information of <server_group> <server_id>\n" +
