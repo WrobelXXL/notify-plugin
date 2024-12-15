@@ -15,10 +15,13 @@ class BungeeCordNotifyPlugin : Plugin() {
     override fun onEnable() {
         notify.onFilterMatch { message, permission ->
             proxy.players.forEach { onlinePlayer ->
-                if (permission.isNotEmpty() && !onlinePlayer.hasPermission(permission)) return@forEach
-                adventure.player(onlinePlayer.uniqueId).sendMessage(message)
+                if (permission.isEmpty() || onlinePlayer.hasPermission(permission)) adventure.player(onlinePlayer).sendMessage(message)
             }
         }
+    }
+
+    override fun onDisable() {
+        adventure.close()
     }
 
 }
