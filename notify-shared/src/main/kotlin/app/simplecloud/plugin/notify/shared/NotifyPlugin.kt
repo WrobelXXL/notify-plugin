@@ -5,9 +5,7 @@ import app.simplecloud.droplet.api.time.ProtobufTimestamp
 import app.simplecloud.plugin.notify.shared.config.Config
 import app.simplecloud.plugin.notify.shared.config.ConfigFactory
 import app.simplecloud.pubsub.PubSubClient
-import build.buf.gen.simplecloud.controller.v1.ServerUpdateEvent
-import build.buf.gen.simplecloud.controller.v1.serverAfterOrNull
-import build.buf.gen.simplecloud.controller.v1.serverBeforeOrNull
+import build.buf.gen.simplecloud.controller.v1.*
 import com.google.protobuf.Timestamp
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
@@ -21,57 +19,78 @@ class NotifyPlugin(
 
     private val config: Config = ConfigFactory.loadOrCreate(dataDirectory)
     private val dateFormat = SimpleDateFormat(config.dateFormat)
+    private val serverStateFilter = config.serverStateFilter
 
-    fun onFilterMatch(function: (message: Component, permission: String) -> Unit) {
+    lateinit var listeningFunction: (message: Component, permission: String) -> Unit
+
+    init {
         val pubSubClient = PubSubClient(
             System.getenv("CONTROLLER_PUBSUB_HOST"),
             System.getenv("CONTROLLER_PUBSUB_PORT").toInt(),
             AuthCallCredentials(System.getenv("CONTROLLER_SECRET"))
         )
 
-        pubSubClient.subscribe("event", ServerUpdateEvent::class.java) { event ->
+        pubSubClient.subscribe("event", ServerStartEvent::class.java) { event ->
+            val startingServer = event.serverOrNull ?: return@subscribe
+            handleUpdate(ServerState.STARTING, startingServer)
+        }
 
+        pubSubClient.subscribe("event", ServerStopEvent::class.java) { event ->
+            val stoppingServer = event.serverOrNull ?: return@subscribe
+            handleUpdate(ServerState.STOPPING, stoppingServer)
+        }
+
+        pubSubClient.subscribe("event", ServerUpdateEvent::class.java) { event ->
             val serverAfter = event.serverAfterOrNull ?: return@subscribe
-            if(event.serverBeforeOrNull?.serverState == serverAfter.serverState) return@subscribe
+            if (event.serverBeforeOrNull?.serverState == serverAfter.serverState) return@subscribe
 
             val serverState = serverAfter.serverState
-
-            val filter = config.serverStateFilter.filter { it.serverState == serverState }
-            if (filter.isEmpty()) return@subscribe
-
-            fun timeStampToLong(timeStamp: Timestamp): Long {
-                return ProtobufTimestamp.toLocalDateTime(timeStamp).toInstant(OffsetDateTime.now().offset)
-                    .toEpochMilli()
-            }
-
-            filter.forEach {
-                val message = miniMessage(
-                    it.message,
-                    Placeholder.parsed("server_ip", serverAfter.serverIp ?: "N/A"),
-                    Placeholder.parsed("server_port", serverAfter.serverPort.toString()),
-                    Placeholder.parsed("server_group", serverAfter.groupName ?: "N/A"),
-
-                    Placeholder.parsed("server_uuid", serverAfter.uniqueId),
-                    Placeholder.parsed("server_id", serverAfter.numericalId.toString()),
-
-                    Placeholder.parsed(
-                        "server_create_date",
-                        dateFormat.format(timeStampToLong(serverAfter.createdAt))
-                    ),
-
-                    Placeholder.parsed(
-                        "server_update_date",
-                        dateFormat.format(timeStampToLong(serverAfter.updatedAt))
-                    ),
-
-                    Placeholder.parsed("online_players", serverAfter.playerCount.toString()),
-                    Placeholder.parsed("max_players", serverAfter.maxPlayers.toString()),
-                    Placeholder.parsed("server_state", serverState.name)
-                )
-
-                function(message, it.permission)
-            }
-
+            handleUpdate(serverState, serverAfter)
         }
+    }
+
+    private fun handleUpdate(serverState: ServerState, server: ServerDefinition) {
+        val filter = serverStateFilter.filter { it.serverState == serverState }
+        if (filter.isEmpty()) return
+
+        filter.forEach {
+            val message = generateMessage(serverState, server, it.message)
+            listeningFunction(message, it.permission)
+        }
+    }
+
+    private fun generateMessage(
+        serverState: ServerState,
+        server: ServerDefinition,
+        message: String
+    ): Component {
+        fun timeStampToLong(timeStamp: Timestamp): Long {
+            return ProtobufTimestamp.toLocalDateTime(timeStamp).toInstant(OffsetDateTime.now().offset)
+                .toEpochMilli()
+        }
+
+        return miniMessage(
+            message,
+            Placeholder.parsed("server_ip", server.serverIp ?: "N/A"),
+            Placeholder.parsed("server_port", server.serverPort.toString()),
+            Placeholder.parsed("server_group", server.groupName ?: "N/A"),
+
+            Placeholder.parsed("server_uuid", server.uniqueId),
+            Placeholder.parsed("server_id", server.numericalId.toString()),
+
+            Placeholder.parsed(
+                "server_create_date",
+                dateFormat.format(timeStampToLong(server.createdAt))
+            ),
+
+            Placeholder.parsed(
+                "server_update_date",
+                dateFormat.format(timeStampToLong(server.updatedAt))
+            ),
+
+            Placeholder.parsed("online_players", server.playerCount.toString()),
+            Placeholder.parsed("max_players", server.maxPlayers.toString()),
+            Placeholder.parsed("server_state", serverState.name)
+        )
     }
 }
