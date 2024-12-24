@@ -25,7 +25,7 @@ class VelocityNotifyPlugin @Inject constructor(
     fun onProxyInitialize(event: ProxyInitializeEvent) {
         val notifyPlugin = NotifyPlugin(dataDirectory)
 
-        notifyPlugin.onFilterMatch { message, permission ->
+        notifyPlugin.listeningFunction = { message, permission ->
             server.allPlayers.forEach { onlinePlayer ->
                 if (permission.isEmpty() || onlinePlayer.hasPermission(permission)) onlinePlayer.sendMessage(message)
             }
