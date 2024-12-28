@@ -31,7 +31,7 @@ Keep your staff informed about server state changes with real-time notifications
 
 - [x] **Ingame Notifiction**: Get chat messages about server changes
 - [x] **Customize Messages**: Configurable messages ([minimessage](https://docs.advntr.dev/minimessage/index.html) supported)
-- [x] **Velocity & BungeeCord support
+- [x] **Velocity & BungeeCord support**
 
 ## Configuration
 
