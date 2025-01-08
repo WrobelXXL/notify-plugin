@@ -5,6 +5,7 @@ simplecloud-controller = "0.0.30-dev.a36640f"
 simplecloud-event = "0.0.1-dev.968f5f5"
 velocity = "3.4.0-SNAPSHOT"
 bungeecord = "1.20-R0.2"
+minotaur = "2.8.7"
 
 [libraries]
 kotlin-jvm = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -19,3 +20,4 @@ bungeecord = { module = "net.md-5:bungeecord-api", version.ref = "bungeecord" }
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
