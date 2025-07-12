@@ -35,6 +35,7 @@ modrinth {
         "1.21.7",
     )
     loaders.add("bungeecord")
+    loaders.add("waterfall")
     changelog.set("https://docs.simplecloud.app/changelog")
     syncBodyFrom.set(rootProject.file("README.md").readText())
 }
