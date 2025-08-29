@@ -3,3 +3,4 @@ version: 1.0-SNAPSHOT
 author: rlqu
 main: app.simplecloud.plugin.notify.bungeecord.BungeeCordNotifyPlugin
 website: 'https://github.com/theSimpleCloud/notify-plugin'
+depends: [simplecloud-api]
